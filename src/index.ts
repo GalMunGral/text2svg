@@ -22,7 +22,7 @@ fontSizeInput.type = "number";
 fontSizeInput.step = "1";
 
 const button1 = document.createElement("button");
-button1.textContent = "generate";
+button1.textContent = "preview";
 
 const button2 = document.createElement("button");
 button2.textContent = "download";
