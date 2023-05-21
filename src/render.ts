@@ -12,16 +12,18 @@ export function render(
   let y = fontSize;
   let prevGlyph: Glyph | null = null;
 
+  const scale = fontSize / font.unitsPerEm;
+  const lineHeight = fontSize + scale * (font.ascender + font.descender);
+
   for (const char of text) {
     if (char == "\n") {
       x = 0;
-      y += fontSize;
+      y += lineHeight;
       prevGlyph = null;
       continue;
     }
 
     const glyph = font.charToGlyph(char);
-    const scale = fontSize / font.unitsPerEm;
     const advanceWidth = scale * (glyph.advanceWidth ?? 0);
     const kerning = prevGlyph
       ? scale * font.getKerningValue(prevGlyph, glyph)
@@ -30,7 +32,7 @@ export function render(
     x += kerning;
     if (x + advanceWidth > width) {
       x = 0;
-      y += fontSize + scale * (font.ascender + font.descender);
+      y += lineHeight;
       prevGlyph = null;
     } else {
       prevGlyph = glyph;
