@@ -75,8 +75,6 @@ export class FontRenderer {
     // const lineHeight = 1.5 * fontSize;
     const lineHeight = scale * (this.font.ascender - this.font.descender);
 
-    console.log(this.font.ascender, this.font.descender);
-
     let x = 0;
     let y = lineHeight;
 
