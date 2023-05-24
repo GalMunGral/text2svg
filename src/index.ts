@@ -4,6 +4,8 @@ import opentype, { Font } from "opentype.js";
 
 let renderer: FontRenderer | undefined;
 
+const label = document.createElement("label");
+label.textContent = "Select a TTF/OTF file";
 const fileInput = document.createElement("input");
 fileInput.style.display = "block";
 fileInput.type = "file";
@@ -21,6 +23,7 @@ const fontSizeInput = document.createElement("input");
 fontSizeInput.placeholder = "font size";
 fontSizeInput.type = "number";
 fontSizeInput.step = "1";
+fontSizeInput.value = "20";
 
 const button1 = document.createElement("button");
 button1.textContent = "preview";
@@ -38,7 +41,7 @@ const ctx = canvas.getContext("2d")!;
 
 button1.onclick = () => {
   if (renderer) {
-    const fontSize = Number(fontSizeInput.value) || 20;
+    const fontSize = Number(fontSizeInput.value);
     renderer.render(ctx, textInput.value, fontSize);
   }
 };
@@ -50,6 +53,7 @@ button2.onclick = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.body.append(label);
   document.body.append(fileInput);
   document.body.append(textInput);
   document.body.append(fontSizeInput);
