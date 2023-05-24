@@ -1,15 +1,16 @@
-import { CanvasOutput, SVGOutput } from "./output";
-import { render } from "./render";
+import { FontRenderer } from "./FontRenderer";
 
 import opentype, { Font } from "opentype.js";
 
-let font: Font | undefined;
+let renderer: FontRenderer | undefined;
+
 const fileInput = document.createElement("input");
 fileInput.style.display = "block";
 fileInput.type = "file";
 fileInput.onchange = async (e) => {
   const buffer = await (e.target as HTMLInputElement).files?.[0].arrayBuffer();
-  font = opentype.parse(buffer);
+  const font = opentype.parse(buffer);
+  renderer = new FontRenderer(font);
 };
 
 const textInput = document.createElement("textarea");
@@ -28,27 +29,23 @@ const button2 = document.createElement("button");
 button2.textContent = "download";
 
 const canvas = document.createElement("canvas");
+canvas.width = 1200 * devicePixelRatio;
 canvas.style.display = "block";
-canvas.width = 800;
-canvas.height = 1200;
+canvas.style.border = "1px solid black";
+canvas.style.width = canvas.width / devicePixelRatio + "px";
 
-const canvasOutput = new CanvasOutput(canvas);
-const svgOutput = new SVGOutput(
-  document.createElementNS("http://www.w3.org/2000/svg", "svg")
-);
+const ctx = canvas.getContext("2d")!;
 
 button1.onclick = () => {
-  if (font) {
+  if (renderer) {
     const fontSize = Number(fontSizeInput.value) || 20;
-    render(canvasOutput, textInput.value, font, fontSize);
+    renderer.render(ctx, textInput.value, fontSize);
   }
 };
 
 button2.onclick = () => {
-  if (font) {
-    const fontSize = Number(fontSizeInput.value) || 20;
-    render(svgOutput, textInput.value, font, fontSize);
-    svgOutput.download();
+  if (renderer) {
+    renderer.downloadSVG();
   }
 };
 
